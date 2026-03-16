@@ -12,7 +12,6 @@
         :root { --police: #1a2a6c; --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; }
         body { background-color: #0a0e14; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; height: 100vh; overflow: hidden; box-sizing: border-box; }
         
-        /* Inlogscherm Style */
         #login-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #0a0e14; display: flex; align-items: center; justify-content: center; 
@@ -22,7 +21,7 @@
             background: #1c222d; padding: 40px; border-radius: 12px; 
             border: 2px solid var(--police); text-align: center; width: 350px;
         }
-        .login-box input { 
+        .login-box input, .login-box select { 
             width: 100%; padding: 12px; margin: 10px 0; border-radius: 4px; 
             border: 1px solid #333; background: #0a0e14; color: white; text-align: center; font-size: 1em;
         }
@@ -34,23 +33,24 @@
         .status-header { background: var(--police); padding: 10px; color: white; display: flex; justify-content: space-between; font-size: 0.8em; align-items: center; }
         #stress-meter { height: 5px; background: var(--success); width: 100%; transition: 1s; }
 
-        .gem-link { background: #00d1ff; color: #1a2a6c; padding: 2px 8px; border-radius: 4px; text-decoration: none; font-weight: bold; }
+        .gem-link { background: #00d1ff; color: #1a2a6c; padding: 4px 10px; border-radius: 4px; text-decoration: none; font-weight: bold; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         
         #aangifte-section { flex: 1.5; min-width: 500px; background: #ffffff; border: 2px solid #bdc3c7; display: flex; flex-direction: column; padding: 20px; border-radius: 8px; color: #333; overflow-y: auto; }
-        .bubble { max-width: 85%; padding: 12px; border-radius: 15px; font-size: 0.9em; }
-        .bot { align-self: flex-start; background: #e8e8e8; color: #2c3e50; }
-        .user-msg { align-self: flex-end; background: var(--police); color: white; }
+        .bubble { max-width: 85%; padding: 12px; border-radius: 15px; font-size: 0.9em; line-height: 1.4; }
+        .bot { align-self: flex-start; background: #e8e8e8; color: #2c3e50; border-bottom-left-radius: 2px; }
+        .user-msg { align-self: flex-end; background: var(--police); color: white; border-bottom-right-radius: 2px; }
         
-        textarea { width: 100%; min-height: 180px; border: 2px solid var(--police); padding: 10px; border-radius: 4px; resize: none; margin-bottom: 10px; }
+        textarea { width: 100%; min-height: 180px; border: 2px solid var(--police); padding: 10px; border-radius: 4px; resize: none; margin-bottom: 10px; color: #333; font-size: 1em; }
         
         #check-section { margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 8px; border-left: 5px solid var(--police); }
         .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #ccc; display: inline-block; margin-right: 8px; }
         .dot-green { background: var(--success); }
         .dot-red { background: var(--danger); }
 
-        .feed-item { background: #f9f9f9; border: 1px solid #ddd; padding: 12px; margin-top: 10px; border-radius: 8px; }
-        button { background: var(--police); color: white; border: none; padding: 10px; cursor: pointer; border-radius: 4px; }
-        .btn-pv { background: var(--success); width: 100%; margin: 10px 0; font-weight: bold; }
+        .feed-item { background: #f9f9f9; border: 1px solid #ddd; padding: 12px; margin-top: 10px; border-radius: 8px; color: #333; }
+        button { background: var(--police); color: white; border: none; padding: 10px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .btn-pv { background: var(--success); width: 100%; margin: 10px 0; font-size: 1.1em; }
         
         @media print { .no-print { display: none !important; } }
     </style>
@@ -61,9 +61,21 @@
     <div class="login-box">
         <h2 style="color:white; margin-bottom: 20px;">Aangifte Systeem</h2>
         <input type="text" id="nameInput" placeholder="Voornaam student...">
-        <input type="text" id="classInput" placeholder="Klas (bijv. Alfa, Bravo...)">
-        <button onclick="login()" style="width:100%; margin-top: 10px; font-weight: bold;">INLOGGEN</button>
-        <p id="login-error" style="color:var(--danger); margin-top:15px; font-size:0.8em; display:none;">Vul een geldige voornaam en NATO-klas in.</p>
+        <select id="classSelect">
+            <option value="" disabled selected>Selecteer je klas...</option>
+            <option value="alfa">Alfa</option>
+            <option value="bravo">Bravo</option>
+            <option value="charlie">Charlie</option>
+            <option value="delta">Delta</option>
+            <option value="echo">Echo</option>
+            <option value="foxtrot">Foxtrot</option>
+            <option value="golf">Golf</option>
+            <option value="hotel">Hotel</option>
+            <option value="juliett">Juliett</option>
+            <option value="kilo">Kilo</option>
+        </select>
+        <button onclick="login()" style="width:100%; margin-top: 10px;">INLOGGEN</button>
+        <p id="login-error" style="color:var(--danger); margin-top:15px; font-size:0.8em; display:none;">Vul je naam in en kies een klas.</p>
     </div>
 </div>
 
@@ -72,13 +84,13 @@
         <div class="status-header">
             <div>
                 <span id="display-info">USER: - | KLAS: -</span>
-                <a href="HIER_JOUW_GEM_LINK_PLAKKEN" target="_blank" class="gem-link">LIVE VERHOOR</a>
+                <a href="HIER_JOUW_GEM_LINK_PLAKKEN" target="_blank" class="gem-link">👉 START VERHOOR</a>
             </div>
             <span id="stress-txt">STATUS: AFWACHTEND</span>
         </div>
         <div id="stress-meter"></div>
         <div id="messages">
-            <div class="bubble bot"><b>Evi:</b> Goedemorgen.</div>
+            <div class="bubble bot"><b>Evi:</b> Goedemorgen. Ik kom aangifte doen... (Klik op de blauwe knop hierboven voor het live gesprek).</div>
         </div>
         <div style="padding:15px; background:white; display:flex; gap:10px; border-top:1px solid #eee;">
             <input type="text" id="botInput" style="flex:1; padding:10px; border:1px solid #ccc; color: black;" placeholder="Stel een vraag..." onkeypress="if(event.key==='Enter') chatWithBot()">
@@ -90,22 +102,23 @@
         <div id="pdf-content">
             <h2 style="color:var(--police); margin:0;">PV Aangifte</h2>
             <p id="pv-meta" style="font-size: 0.8em; color: #666; margin-bottom: 10px;">Slachtoffer: E. de Vries | Verbalisant: -</p>
-            <textarea id="pvInput" placeholder="Schrijf hier de aangifte..." oninput="checkPV()"></textarea>
+            <textarea id="pvInput" placeholder="Stel hier de officiële aangifte op in de ik-vorm..." oninput="checkPV()"></textarea>
             
             <div id="check-section" class="no-print">
-                <div id="c1" class="status-dot"></div><span>Geen toestemming</span><br>
-                <div id="c2" class="status-dot"></div><span>Vernieling</span><br>
-                <div id="c3" class="status-dot"></div><span>Omschrijving</span><br>
-                <div id="c4" class="status-dot"></div><span>Ik-vorm</span><br>
-                <div id="c5" class="status-dot"></div><span>Gouden W's</span><br>
-                <div id="c6" class="status-dot"></div><span>Redenen van wetenschap</span><br>
-                <div id="c7" class="status-dot"></div><span>OVT & Actieve vormen</span>
+                <b style="font-size: 0.9em; color: var(--police);">PV Aangifte Check:</b><br>
+                <div class="check-item"><div id="c1" class="status-dot"></div><span>Geen toestemming</span></div>
+                <div class="check-item"><div id="c2" class="status-dot"></div><span>Vernieling</span></div>
+                <div class="check-item"><div id="c3" class="status-dot"></div><span>Omschrijving</span></div>
+                <div class="check-item"><div id="c4" class="status-dot"></div><span>Ik-vorm</span></div>
+                <div class="check-item"><div id="c5" class="status-dot"></div><span>Gouden W's</span></div>
+                <div class="check-item"><div id="c6" class="status-dot"></div><span>Redenen van wetenschap</span></div>
+                <div class="check-item"><div id="c7" class="status-dot"></div><span>OVT & Actieve vormen</span></div>
             </div>
             <div id="feed-container"></div>
         </div>
         <button class="btn-pv no-print" onclick="submitToFirebase()">OPSLAAN IN ARCHIEF</button>
-        <button class="no-print" onclick="downloadPDF()" style="background:#e67e22; margin-bottom:5px;">DOWNLOAD PDF</button>
-        <button class="no-print" onclick="clearDatabase()" style="background:#95a5a6; font-size:0.7em;">WIS ARCHIEF</button>
+        <button class="no-print" onclick="downloadPDF()" style="background:#e67e22; margin-bottom:5px; width: 100%;">DOWNLOAD PDF</button>
+        <button class="no-print" onclick="clearDatabase()" style="background:#95a5a6; font-size:0.7em; width: 100%;">WIS ARCHIEF</button>
     </div>
 </div>
 
@@ -118,13 +131,11 @@
     let currentClass = "";
     let stress = 15;
 
-    const allowedClasses = ["alfa", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "juliett", "kilo"];
-
     function login() {
         const name = document.getElementById('nameInput').value.trim();
-        const klas = document.getElementById('classInput').value.trim().toLowerCase();
+        const klas = document.getElementById('classSelect').value;
         
-        if(name.length > 1 && allowedClasses.includes(klas)) {
+        if(name.length > 1 && klas !== "") {
             currentName = name;
             currentClass = klas;
             document.getElementById('login-overlay').style.display = 'none';
@@ -137,7 +148,48 @@
         }
     }
 
-    // --- De rest van je logica (chatWithBot, checkPV, etc.) blijft hetzelfde, maar gebruik nu de nieuwe paden ---
+    function chatWithBot() {
+        const input = document.getElementById('botInput');
+        if(!input.value.trim()) return;
+        addBubble(input.value, 'user-msg');
+        input.value = '';
+        setTimeout(() => {
+            addBubble("Evi kijkt je aan... (Gebruik de blauwe knop hierboven om het echte gesprek met de AI-Evi te voeren!)", 'bot');
+            stress += 2;
+            updateStressUI();
+        }, 600);
+    }
+
+    function addBubble(text, side) {
+        const div = document.createElement('div');
+        div.className = `bubble ${side}`;
+        div.innerHTML = side === 'bot' ? `<b>Evi:</b> ${text}` : text;
+        const m = document.getElementById('messages');
+        m.appendChild(div);
+        m.scrollTop = m.scrollHeight;
+    }
+
+    function checkPV() {
+        const t = document.getElementById('pvInput').value;
+        const lowT = t.toLowerCase();
+        const updateDot = (id, condition) => {
+            document.getElementById(id).className = condition ? "status-dot dot-green" : "status-dot dot-red";
+        };
+
+        updateDot("c1", lowT.includes("geen toestemming") || lowT.includes("zonder mijn toestemming"));
+        updateDot("c2", lowT.includes("verniel") || lowT.includes("kapot") || lowT.includes("ketting") || lowT.includes("verbroken"));
+        updateDot("c3", lowT.includes("wit") && lowT.includes("gazelle") && lowT.includes("649"));
+        updateDot("c4", t.includes("Ik ") || t.includes("ik "));
+        updateDot("c5", lowT.includes("vredenburg") && lowT.includes("4 november") && lowT.includes("2002"));
+        updateDot("c6", /(ik|aangeefster)\s+(verklaar|zag|hoorde|bevestig|merkte)\s+dat/i.test(lowT));
+        updateDot("c7", /\b(verklaarde|zag|hoorde|stond|bevond|nam|verliet|bevestigde|ontdekte|merkte|keek)\b|(\w+(de|te|den|ten)\b)/i.test(lowT));
+    }
+
+    function updateStressUI() {
+        const meter = document.getElementById('stress-meter');
+        meter.style.width = Math.max(0, (100 - stress)) + "%";
+        if(stress > 75) meter.style.background = "var(--danger)";
+    }
 
     function submitToFirebase() {
         const txt = document.getElementById('pvInput').value.trim();
@@ -166,8 +218,14 @@
         });
     }
 
-    // [Plaats hier de rest van de functies: chatWithBot, checkPV, updateStressUI, addBubble, downloadPDF, clearDatabase uit je vorige code]
-    // Let op: in clearDatabase() gebruik nu db.ref(`posts/${currentClass}`).remove();
+    function downloadPDF() {
+        const element = document.getElementById('pdf-content');
+        html2pdf().set({ margin: 10, filename: `Aangifte_Evi_${currentName}.pdf`, jsPDF: { format: 'a4' } }).from(element).save();
+    }
+
+    function clearDatabase() { 
+        if(confirm("Hele archief van deze klas wissen?")) db.ref(`posts/${currentClass}`).remove(); 
+    }
 </script>
 </body>
 </html>
